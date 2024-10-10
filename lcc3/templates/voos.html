@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voos Disponíveis</title>
+</head>
+<body>
+    <h1>Voos Disponíveis</h1>
+    <ul>
+        {% if flights %}
+            {% for flight in flights %}
+                <li>ID: {{ flight.id }} | Origem: {{ flight.origin }} | Destino: {{ flight.destination }} | Preço: R$ {{ flight.price }}</li>
+            {% endfor %}
+        {% else %}
+            <li>Nenhum voo disponível.</li>
+        {% endif %}
+    </ul>
+</body>
+</html>

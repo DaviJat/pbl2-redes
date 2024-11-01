@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva de Trechos de Voos</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        h1 { text-align: center; color: #333; }
+        .select-group, .result { margin: 20px 0; }
+        .select-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .button { display: inline-block; padding: 10px 20px; font-size: 16px; color: #fff; background-color: #007BFF; border: none; border-radius: 4px; cursor: pointer; }
+        .button:hover { background-color: #0056b3; }
+        .result { padding: 10px; font-weight: bold; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Reserva de Trechos de Voos</h1>
+        
+        <div class="select-group">
+            <label for="company">Selecione a Companhia Aérea:</label>
+            <select id="company">
+                <option value="A">Companhia A</option>
+                <option value="B">Companhia B</option>
+                <option value="C">Companhia C</option>
+            </select>
+        </div>
+
+        <div class="select-group">
+            <label for="from">Origem:</label>
+            <input type="text" id="from" placeholder="Ex: Belém">
+        </div>
+        
+        <div class="select-group">
+            <label for="to">Destino:</label>
+            <input type="text" id="to" placeholder="Ex: Fortaleza">
+        </div>
+        
+        <button class="button" onclick="reserve()">Reservar Trecho</button>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        async function reserve() {
+            const company = document.getElementById('company').value;
+            const from = document.getElementById('from').value;
+            const to = document.getElementById('to').value;
+            const result = document.getElementById('result');
+            
+            if (!from || !to) {
+                result.innerHTML = "Por favor, informe a origem e o destino.";
+                result.className = "result error";
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:500${company === 'A' ? 0 : company === 'B' ? 1 : 2}/reserve`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ from, to })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    result.innerHTML = `Trecho reservado com sucesso pela Companhia ${company}!`;
+                    result.className = "result success";
+                } else {
+                    result.innerHTML = `Falha ao reservar trecho: ${data.status}`;
+                    result.className = "result error";
+                }
+            } catch (error) {
+                result.innerHTML = "Erro na conexão com o servidor. Tente novamente.";
+                result.className = "result error";
+            }
+        }
+    </script>
+</body>
+</html>

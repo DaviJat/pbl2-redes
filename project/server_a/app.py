@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS 
 import pickle
@@ -8,7 +9,7 @@ CORS(app)
 
 # Identificação do servidor e arquivo pickle de trechos
 server_id = "A"
-filename = "trechos_server_a.plk"
+filename = os.path.join("project", "server_a", "trechos_server_a.plk")  
 other_servers = ["http://localhost:5001", "http://localhost:5002"]
 
 # Carregar os trechos deste servidor
@@ -24,6 +25,7 @@ def get_trechos():
     all_trechos = fetch_trechos_from_servers(all_servers)
     trechos_in_graph = create_graph(all_trechos)
     all_routes = create_routes(trechos_in_graph, origem, destino)
+    print(all_routes)
 
     return jsonify(all_routes), 200
 

@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS 
 import pickle
@@ -7,8 +8,8 @@ app = Flask(__name__)
 CORS(app)
 
 # Identificação do servidor e arquivo pickle de trechos
-server_id = "b"
-filename = "trechos_server_B.plk"
+server_id = "B"
+filename = os.path.join("project", "server_b", "trechos_server_b.plk")  
 other_servers = ["http://localhost:5000", "http://localhost:5002"]
 
 # Carregar os trechos deste servidor

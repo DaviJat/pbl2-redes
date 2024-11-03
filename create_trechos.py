@@ -1,4 +1,5 @@
 import pickle
+import os
 
 trechos_a = [
     {"id": 1, "origem": "São Paulo", "destino": "Rio de Janeiro", "distancia": 430, "quantidade_passagens": 10},
@@ -54,11 +55,25 @@ trechos_c = [
     {"id": 13, "origem": "Recife", "destino": "Porto Alegre", "distancia": 3700, "quantidade_passagens": 2}
 ]
 
-with open("trechos_server_a.plk", 'wb') as f:
-    pickle.dump(trechos_a, f)
+base_diretorio = "project"
 
-with open("trechos_server_b.plk", 'wb') as f:
-    pickle.dump(trechos_b, f)
+diretorios = {
+    "server_a": trechos_a,
+    "server_b": trechos_b,
+    "server_c": trechos_c
+}
 
-with open("trechos_server_c.plk", 'wb') as f:
-    pickle.dump(trechos_c, f)
+# Criar pastas e salvar arquivos
+for nome_diretorio, dados_trechos in diretorios.items():
+    # Caminho completo da pasta
+    caminho_diretorio = os.path.join(base_diretorio, nome_diretorio)
+
+    # Cria o diretório se ele não existir
+    os.makedirs(caminho_diretorio, exist_ok=True)
+
+    # Caminho completo do arquivo dentro da pasta
+    caminho_arquivo = os.path.join(caminho_diretorio, f"trechos_{nome_diretorio}.plk")
+
+    # Salvar os dados dos trechos em cada arquivo
+    with open(caminho_arquivo, 'wb') as f:
+        pickle.dump(dados_trechos, f)

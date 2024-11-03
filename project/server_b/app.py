@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask_cors import CORS 
 import pickle
-from utils import create_routes, fetch_trechos_from_servers, request_reservation, receive_request, confirm_reservation, load_trechos
+from utils import create_routes, fetch_trechos_from_servers, request_reservation, receive_request, confirm_reservation, load_trechos, create_graph
 
 app = Flask(__name__)
 CORS(app)
@@ -16,14 +16,14 @@ def load_trechos(filename):
     with open(filename, 'rb') as f:
         return pickle.load(f)
 
-# Endpoint para obter trechos de todos os servidores
 @app.route('/trechos', methods=['GET'])
 def get_trechos():
     origem = request.args.get('origem', '')
     destino = request.args.get('destino', '')
     all_servers = [f"http://127.0.0.1:5001"] + other_servers
     all_trechos = fetch_trechos_from_servers(all_servers)
-    all_routes = create_routes(all_trechos, origem, destino)
+    trechos_in_graph = create_graph(all_trechos)
+    all_routes = create_routes(trechos_in_graph, origem, destino)
 
     return jsonify(all_routes), 200
 

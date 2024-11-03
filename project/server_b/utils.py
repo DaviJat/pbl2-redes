@@ -1,6 +1,7 @@
 import threading
 import requests
 import os
+import networkx as nx
 
 # Variáveis de exclusão mútua
 clock = 0
@@ -79,5 +80,49 @@ def fetch_trechos_from_servers(servers):
             print(f"Erro ao acessar o servidor {server_url}: {e}")
     return all_trechos
 
-def create_routes(trechos, origem, destino):
-    print(trechos, origem, destino)
+# Função para pegar os 10 menores caminhos entre origem e destino
+def create_routes(grafo, origem, destino):
+    rotas = []
+
+    try:
+        rota_inicial = nx.shortest_path(grafo, source=origem, target=destino, weight='distancia')
+        distancia_rota = nx.shortest_path_length(grafo, source=origem, target=destino, weight='distancia')
+        rotas.append({"rota": rota_inicial, "distancia": distancia_rota})
+    except nx.NetworkXNoPath:
+        return [] # Retorna vazio se não houver caminho
+
+    # Encontrar até 10 caminhos alternativos
+    for i in range(1, 10):
+        try:
+            # Remover a rota atual para forçar uma nova rota
+            grafo.remove_edges_from(
+                [(rota_inicial[i], rota_inicial[i + 1]) for i in range(len(rota_inicial) - 1)])
+            nova_rota = nx.shortest_path(grafo, source=origem, target=destino, weight='distancia')
+            nova_distancia = nx.shortest_path_length(grafo, source=origem, target=destino, weight='distancia')
+            rotas.append({"caminho": nova_rota, "distancia": nova_distancia})
+            rota_inicial = nova_rota
+        except nx.NetworkXNoPath:
+            break  # Se não encontrar caminho, termina
+
+    return rotas
+
+# função para criar um grafo totalmente relacionado dos trechos enviados
+def create_graph(trechos):
+    grafo = nx.Graph()
+
+    for trecho in trechos:
+        origem = trecho["origem"]
+        destino = trecho["destino"]
+        distancia = trecho["distancia"]
+        passagens = trecho["quantidade_passagens"]
+        trecho_id = trecho["id"]
+
+        grafo.add_edge(
+            origem,
+            destino,
+            id=trecho_id,
+            distancia=distancia,
+            passagens=passagens
+        )
+
+    return grafo

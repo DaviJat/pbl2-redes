@@ -78,3 +78,6 @@ def fetch_trechos_from_servers(servers):
         except requests.exceptions.RequestException as e:
             print(f"Erro ao acessar o servidor {server_url}: {e}")
     return all_trechos
+
+def create_routes(trechos, origem, destino):
+    print(trechos, origem, destino)

@@ -25,17 +25,33 @@ async function carregarRotas() {
 function atualizarTabela(trechos) {
   const tableBody = document.getElementById('trechosBody');
   tableBody.innerHTML = '';
-  trechos.forEach(trecho => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${trecho.id}</td>
-      <td>${trecho.rota.split(" -> ")[0]}</td>
-      <td>${trecho.rota.split(" -> ")[1]}</td>
-      <td><button onclick="iniciarReserva('${trecho.id}')">Reservar</button></td>
-    `;
-    tableBody.appendChild(row);
+
+  if (trechos.length === 0) {
+    tableBody.innerHTML = '<tr><td colspan="3">Nenhum trecho encontrado.</td></tr>';
+    return;
+  }
+
+  console.log(trechos);
+
+  trechos.forEach((trecho, index) => {
+    console.log(trecho);
+    const rota = trecho.rota || trecho.caminho; // Usa 'rota' se existir, senão usa 'caminho'
+    
+    // Verifica se 'rota' ou 'caminho' é um array
+    if (Array.isArray(rota)) {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${rota.join(' -> ')}</td>
+        <td>${trecho.distancia}</td>
+        <td><button onclick="iniciarReserva(${index})">Reservar</button></td>
+      `;
+      tableBody.appendChild(row);
+    } else {
+      console.warn(`Formato inesperado para trecho ${index}: `, trecho);
+    }
   });
 }
+
 
 async function iniciarReserva(trechoId) {
   console.log(`Solicitar reserva para o trecho: ${trechoId}`);

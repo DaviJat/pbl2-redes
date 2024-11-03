@@ -47,39 +47,36 @@
     </form>
 </section>
 
-
-  <section>
+<section>
     <h2>Trechos Disponíveis</h2>
     <table>
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Origem</th>
-          <th>Destino</th>
+          <th>Rota</th>
+          <th>Distância (km)</th>
           <th>Ação</th>
         </tr>
       </thead>
       <tbody id="trechosBody">
         <tr>
-          <td colspan="4">Carregando trechos...</td>
+          <td colspan="3">Carregando trechos...</td>
         </tr>
       </tbody>
     </table>
-    <button onclick="carregarTrechos()">Atualizar Trechos</button>
-  </section>
+</section>
 
-  <section>
+<section>
     <h2>Confirmar Compra de Trecho</h2>
     <form onsubmit="event.preventDefault(); confirmarCompra();">
       <label for="trechoIdCompra">ID do Trecho para Compra:</label>
       <input type="text" id="trechoIdCompra" placeholder="Ex: 1" required>
       <button type="submit">Confirmar Compra</button>
     </form>
-  </section>
+</section>
 
-  <section>
+<section>
     <h2>Logs</h2>
     <div id="log"></div>
-  </section>
+</section>
 </body>
 </html>

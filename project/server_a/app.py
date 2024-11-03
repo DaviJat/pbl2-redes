@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS 
 import pickle
 from utils import fetch_trechos_from_servers, request_reservation, receive_request, confirm_reservation, load_trechos
 
 app = Flask(__name__)
+CORS(app)
 
 # Identificação do servidor e arquivo pickle de trechos
 server_id = "A"

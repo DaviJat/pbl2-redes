@@ -1,6 +1,6 @@
 const API_URL = 'http://127.0.0.1:5000';
 
-async function carregarTrechos(origem = '', destino = '') {
+async function carregarRotas(origem = '', destino = '') {
   try {
     const url = new URL(`${API_URL}/trechos`);
     if (origem) url.searchParams.append("origem", origem);

@@ -65,3 +65,16 @@ def confirm_reservation(trecho_id, server_id, filename):
     # Remover o trecho do arquivo
     remove_trecho(filename, trecho_id)
     print(f"Servidor {server_id} confirmou a compra do trecho {trecho_id} e o removeu de {filename}.")
+
+# Função para obter trechos de todos os servidores
+def fetch_trechos_from_servers(servers):
+    all_trechos = []
+    for server_url in servers:
+        try:
+            print(f"{server_url}/return_trechos")
+            response = requests.get(f"{server_url}/return_trechos")
+            if response.status_code == 200:
+                all_trechos.extend(response.json())
+        except requests.exceptions.RequestException as e:
+            print(f"Erro ao acessar o servidor {server_url}: {e}")
+    return all_trechos

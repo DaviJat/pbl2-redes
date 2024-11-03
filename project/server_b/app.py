@@ -1,19 +1,30 @@
 from flask import Flask, request, jsonify
-from utils import request_reservation, receive_request, confirm_reservation, load_trechos
+import pickle
+from utils import fetch_trechos_from_servers, request_reservation, receive_request, confirm_reservation, load_trechos
 
 app = Flask(__name__)
 
-# Identificação do servidor e arquivo JSON de trechos
-server_id = "B"
-filename = "trechos_server_b.json"
+# Identificação do servidor e arquivo pickle de trechos
+server_id = "A"
+filename = "trechos_server_a.plk"
 other_servers = ["http://localhost:5000", "http://localhost:5002"]
 
 # Carregar os trechos deste servidor
-trechos = load_trechos(filename)
+def load_trechos(filename):
+    with open(filename, 'rb') as f:
+        return pickle.load(f)
 
-# Endpoint para obter trechos disponíveis
+# Endpoint para obter trechos de todos os servidores
 @app.route('/trechos', methods=['GET'])
 def get_trechos():
+    all_servers = [f"http://127.0.0.1:5001"] + other_servers
+    all_trechos = fetch_trechos_from_servers(all_servers)
+    return jsonify(all_trechos), 200
+
+# Endpoint para retornar trechos do servidor atual
+@app.route('/return_trechos', methods=['GET'])
+def return_trechos():
+    trechos = load_trechos(filename)
     return jsonify(trechos), 200
 
 # Endpoint para enviar solicitação de reserva
@@ -21,7 +32,7 @@ def get_trechos():
 def reserve():
     data = request.get_json()
     trecho_id = data["trecho_id"]
-    trecho = next((t for t in trechos if t["id"] == trecho_id), None)
+    trecho = next((t for t in load_trechos(filename) if t["id"] == trecho_id), None)
     
     if trecho:
         request_reservation(trecho, server_id, other_servers)

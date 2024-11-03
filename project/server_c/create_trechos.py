@@ -1,4 +1,6 @@
-[
+import pickle
+
+trechos = [
     {"id": 1, "rota": "Curitiba -> Florianópolis"},
     {"id": 2, "rota": "Florianópolis -> Porto Alegre"},
     {"id": 3, "rota": "Porto Alegre -> Caxias do Sul"},
@@ -10,3 +12,6 @@
     {"id": 9, "rota": "Campo Grande -> Cuiabá"},
     {"id": 10, "rota": "Cuiabá -> Goiânia"}
 ]
+
+with open("trechos_server_c.plk", 'wb') as f:
+    pickle.dump(trechos, f)

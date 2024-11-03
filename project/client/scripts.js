@@ -1,22 +1,24 @@
 const API_URL = 'http://127.0.0.1:5000';
 
-async function carregarRotas(origem = '', destino = '') {
+async function carregarRotas() {
+  const origem = document.getElementById('origem').value;
+  const destino = document.getElementById('destino').value;
   try {
-    const url = new URL(`${API_URL}/trechos`);
-    if (origem) url.searchParams.append("origem", origem);
-    if (destino) url.searchParams.append("destino", destino);
+      const url = new URL(`${API_URL}/trechos`);
+      if (origem) url.searchParams.append("origem", origem);
+      if (destino) url.searchParams.append("destino", destino);
 
-    const response = await fetch(url);
-    if (response.ok) {
-      const data = await response.json();
-      atualizarTabela(data);
-      logStatus("Trechos carregados com sucesso.");
-    } else {
-      logStatus("Erro ao carregar trechos.");
-    }
+      const response = await fetch(url);
+      if (response.ok) {
+          const data = await response.json();
+          atualizarTabela(data);
+          logStatus("Trechos carregados com sucesso.");
+      } else {
+          logStatus("Erro ao carregar trechos.");
+      }
   } catch (error) {
-    console.error("Erro ao carregar trechos:", error);
-    logStatus("Erro ao carregar trechos.");
+      console.error("Erro ao carregar trechos:", error);
+      logStatus("Erro ao carregar trechos.");
   }
 }
 

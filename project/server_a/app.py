@@ -27,7 +27,7 @@ def get_trechos():
     all_trechos = fetch_trechos_from_servers(all_servers)
     trechos_in_graph = create_graph(all_trechos)
     all_routes = create_routes(trechos_in_graph, origem, destino)
-    
+
     return jsonify(all_routes), 200
 
 # Endpoint para retornar trechos do servidor atual
@@ -40,6 +40,8 @@ def return_trechos():
 @app.route('/comprar', methods=['POST'])
 def comprar():
     data = request.get_json()
+    print(data) # Até aqui ta ok
+
     trecho_ids = data["trecho_ids"]  # Lista de IDs de trechos para a rota selecionada
 
     # Solicitar acesso a cada trecho (região crítica) na rota

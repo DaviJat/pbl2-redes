@@ -21,6 +21,7 @@ async function carregarRotas() {
       const response = await fetch(url);
       if (response.ok) {
           const data = await response.json();
+          console.log(data)
           if (data.length > 0) {
               atualizarTabela(data);
               logStatus("Trechos carregados com sucesso.");
@@ -39,44 +40,57 @@ async function carregarRotas() {
   }
 }
 
-function atualizarTabela(trechos) {
+// Declaração global de json_rotas
+let json_rotas = {};
+
+function atualizarTabela(rotas) {
   const tableBody = document.getElementById('trechosBody');
   tableBody.innerHTML = '';
 
-  if (trechos.length === 0) {
+  // Redefine o objeto json_rotas para evitar acúmulo de dados antigos
+  json_rotas = {};
+
+  if (rotas.length === 0) {
     tableBody.innerHTML = '<tr><td colspan="3">Nenhum trecho encontrado.</td></tr>';
     return;
   }
-  console.log(trechos)
 
-  trechos.forEach((trecho) => {
-    const rota = trecho.rota || trecho.caminho;
+  rotas.forEach((rota, index) => {
+    // Array para armazenar a descrição da rota (origem -> destino)
+    const rotaDescricao = rota.map(trecho => `${trecho.origem} -> ${trecho.destino}`).join(', ');
 
-    if (Array.isArray(rota)) {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${rota.join(' -> ')}</td>
-        <td>${trecho.distancia}</td>
-        <td><button onclick="confirmarCompra(${trecho})">Comprar</button></td>
-      `;
-      tableBody.appendChild(row);
-    } else {
-      console.warn("Formato inesperado para trecho: ", trecho);
-    }
+    // Soma as distâncias da rota
+    const distanciaTotal = rota.reduce((total, trecho) => total + trecho.distancia, 0);
+
+    // Adiciona ao objeto json_rotas global
+    json_rotas[index] = {
+      id: index,
+      rota: rota
+    };
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${rotaDescricao}</td>
+      <td>${distanciaTotal}</td>
+      <td><button onclick="confirmarCompra(${index})">Comprar</button></td>
+    `;
+    tableBody.appendChild(row);
   });
 }
 
-async function confirmarCompra(trechos) {
+async function confirmarCompra(id) {
+  // Obtém a rota específica a partir de json_rotas
+  const rota = json_rotas[id].rota;
+  
   try {
-    console.log("Confirmando compra para a rota:", rotas);  // Exibir os trechos da rota no console
-
-    const response = await fetch(`${API_URL}/confirm_purchase`, {
+    const response = await fetch(`${API_URL}/comprar`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ rotas })  // Enviar a lista de rotas completa
+      body: JSON.stringify({ rota })  // Envia a rota específica no formato correto
     });
+
     const data = await response.json();
-    
+
     if (response.ok) {
       logStatus(`Compra confirmada para a rota: ${data.status}`);
       carregarRotas();
@@ -88,6 +102,7 @@ async function confirmarCompra(trechos) {
     logStatus("Erro ao confirmar compra.");
   }
 }
+
 
 function logStatus(message) {
   const logElement = document.getElementById('log');

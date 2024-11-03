@@ -95,24 +95,46 @@ def fetch_trechos_from_servers(servers):
 def create_routes(grafo, origem, destino):
     rotas = []
     try:
+        # Encontrar a rota inicial e coletar dados dos trechos completos
         rota_inicial = nx.shortest_path(grafo, source=origem, target=destino, weight='distancia')
-        distancia_rota = nx.shortest_path_length(grafo, source=origem, target=destino, weight='distancia')
-        rotas.append({"rota": rota_inicial, "distancia": distancia_rota})
+        trechos_rota_inicial = [
+            {
+                "id": grafo[rota_inicial[i]][rota_inicial[i + 1]]["id"],
+                "servidor": grafo[rota_inicial[i]][rota_inicial[i + 1]]["servidor"],
+                "origem": rota_inicial[i],
+                "destino": rota_inicial[i + 1],
+                "distancia": grafo[rota_inicial[i]][rota_inicial[i + 1]]["distancia"],
+                "quantidade_passagens": grafo[rota_inicial[i]][rota_inicial[i + 1]]["passagens"]
+            }
+            for i in range(len(rota_inicial) - 1)
+        ]
+        rotas.append(trechos_rota_inicial)
     except nx.NetworkXNoPath:
         return []  # Retorna vazio se não houver caminho
 
     # Encontrar até 10 caminhos alternativos
-    for i in range(0, 10):
+    for _ in range(10):
         try:
             # Remover a rota atual para forçar uma nova rota
             grafo.remove_edges_from(
-                [(rota_inicial[i], rota_inicial[i + 1]) for i in range(len(rota_inicial) - 1)])
+                [(rota_inicial[i], rota_inicial[i + 1]) for i in range(len(rota_inicial) - 1)]
+            )
             nova_rota = nx.shortest_path(grafo, source=origem, target=destino, weight='distancia')
-            nova_distancia = nx.shortest_path_length(grafo, source=origem, target=destino, weight='distancia')
-            rotas.append({"caminho": nova_rota, "distancia": nova_distancia})
-            rota_inicial = nova_rota
+            trechos_nova_rota = [
+                {
+                    "id": grafo[nova_rota[i]][nova_rota[i + 1]]["id"],
+                    "servidor": grafo[nova_rota[i]][nova_rota[i + 1]]["servidor"],
+                    "origem": nova_rota[i],
+                    "destino": nova_rota[i + 1],
+                    "distancia": grafo[nova_rota[i]][nova_rota[i + 1]]["distancia"],
+                    "quantidade_passagens": grafo[nova_rota[i]][nova_rota[i + 1]]["passagens"]
+                }
+                for i in range(len(nova_rota) - 1)
+            ]
+            rotas.append(trechos_nova_rota)
+            rota_inicial = nova_rota  # Atualizar para a próxima iteração
         except nx.NetworkXNoPath:
-            break  # Se não encontrar caminho, termina
+            break  # Termina se não encontrar um novo caminho
 
     return rotas
 
@@ -125,12 +147,14 @@ def create_graph(trechos):
         distancia = trecho["distancia"]
         passagens = trecho["quantidade_passagens"]
         trecho_id = trecho["id"]
+        servidor = trecho["servidor"]
 
         grafo.add_edge(
             origem,
             destino,
             id=trecho_id,
             distancia=distancia,
-            passagens=passagens
+            passagens=passagens,
+            servidor=servidor  # Adiciona o servidor ao grafo
         )
     return grafo

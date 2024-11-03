@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Servidor A - Sistema de Reservas</title>
+  <link rel="stylesheet" href="styles.css"> <!-- Link para o CSS externo -->
+  <script src="scripts.js" defer></script> <!-- Link para o JS externo -->
+</head>
+<body onload="carregarTrechos()">
+  <h1>Servidor A - Sistema de Reservas</h1>
+
+  <section>
+    <h2>Trechos Disponíveis</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Origem</th>
+          <th>Destino</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody id="trechosBody">
+        <tr>
+          <td colspan="4">Carregando trechos...</td>
+        </tr>
+      </tbody>
+    </table>
+    <button onclick="carregarTrechos()">Atualizar Trechos</button>
+  </section>
+
+  <section>
+    <h2>Confirmar Compra de Trecho</h2>
+    <form onsubmit="event.preventDefault(); confirmarCompra();">
+      <label for="trechoIdCompra">ID do Trecho para Compra:</label>
+      <input type="text" id="trechoIdCompra" placeholder="Ex: 1" required>
+      <button type="submit">Confirmar Compra</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Logs</h2>
+    <div id="log"></div>
+  </section>
+</body>
+</html>

@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  h1, h2 {
+    color: #003366; /* Azul escuro */
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  th, td {
+    border: 1px solid #003366;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  th {
+    background-color: #003366;
+    color: white;
+  }
+  
+  button {
+    background-color: #007BFF; /* Azul claro */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  button:hover {
+    background-color: #0056b3; /* Azul escuro ao passar o mouse */
+  }
+  
+  #log {
+    background-color: #f0f0f0;
+    padding: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 20px;
+  }
+  

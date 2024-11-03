@@ -1,15 +1,17 @@
 import os
-from flask import Flask, request, jsonify
-from flask_cors import CORS 
 import pickle
-from utils import create_routes, fetch_trechos_from_servers, request_reservation, receive_request, confirm_reservation, load_trechos, create_graph
+import threading
+import requests
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from utils import create_routes, fetch_trechos_from_servers, receive_request, confirm_purchase, load_trechos, create_graph, lamport_clock, queue, request_region_access
 
 app = Flask(__name__)
 CORS(app)
 
 # Identificação do servidor e arquivo pickle de trechos
 server_id = "C"
-filename = os.path.join("project", "server_c", "trechos_server_c.plk")  
+filename = os.path.join("project", "server_c", "trechos_server_c.plk")
 other_servers = ["http://localhost:5000", "http://localhost:5001"]
 
 # Carregar os trechos deste servidor
@@ -25,7 +27,6 @@ def get_trechos():
     all_trechos = fetch_trechos_from_servers(all_servers)
     trechos_in_graph = create_graph(all_trechos)
     all_routes = create_routes(trechos_in_graph, origem, destino)
-
     return jsonify(all_routes), 200
 
 # Endpoint para retornar trechos do servidor atual
@@ -34,32 +35,29 @@ def return_trechos():
     trechos = load_trechos(filename)
     return jsonify(trechos), 200
 
-# Endpoint para enviar solicitação de reserva
-@app.route('/reserve', methods=['POST'])
-def reserve():
+# Endpoint para compra com controle de acesso a múltiplas regiões críticas
+@app.route('/comprar', methods=['POST'])
+def comprar():
     data = request.get_json()
-    trecho_id = data["trecho_id"]
-    trecho = next((t for t in load_trechos(filename) if t["id"] == trecho_id), None)
-    
-    if trecho:
-        request_reservation(trecho, server_id, other_servers)
-        return {"status": "requested"}, 200
-    return {"error": "Trecho não encontrado"}, 404
+    trecho_ids = data["trecho_ids"]  # Lista de IDs de trechos para a rota selecionada
 
-# Endpoint para receber solicitação de reserva de outro servidor
+    # Solicitar acesso a cada trecho (região crítica) na rota
+    for trecho_id in trecho_ids:
+        if not request_region_access(trecho_id, server_id, other_servers):
+            return {"error": f"Falha ao adquirir acesso exclusivo para o trecho {trecho_id}"}, 409
+
+    # Confirmar compra de todos os trechos adquiridos
+    for trecho_id in trecho_ids:
+        confirm_purchase(trecho_id, server_id, filename)
+
+    return {"status": "confirmed", "message": f"Compra dos trechos {trecho_ids} confirmada"}, 200
+
+# Endpoint para receber requisição de reserva de trecho de outro servidor
 @app.route('/receive_request', methods=['POST'])
 def receive_request_handler():
     data = request.get_json()
     receive_request(data)
     return {"status": "received"}, 200
-
-# Endpoint para confirmar compra do trecho
-@app.route('/confirm_purchase', methods=['POST'])
-def confirm_purchase():
-    data = request.get_json()
-    trecho_id = data["trecho_id"]
-    confirm_reservation(trecho_id, server_id, filename)
-    return {"status": "confirmed"}, 200
 
 if __name__ == "__main__":
     app.run(port=5002)

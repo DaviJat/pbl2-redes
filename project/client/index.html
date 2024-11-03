@@ -11,6 +11,25 @@
   <h1>Servidor A - Sistema de Reservas</h1>
 
   <section>
+    <h2>Filtrar Trechos</h2>
+    <form onsubmit="event.preventDefault(); filtrarTrechos();">
+      <label for="origem">Origem:</label>
+      <select id="origem">
+        <option value="">Selecione a origem</option>
+        <!-- Adicione opções de origem aqui -->
+      </select>
+
+      <label for="destino">Destino:</label>
+      <select id="destino">
+        <option value="">Selecione o destino</option>
+        <!-- Adicione opções de destino aqui -->
+      </select>
+
+      <button type="submit">Filtrar</button>
+    </form>
+  </section>
+
+  <section>
     <h2>Trechos Disponíveis</h2>
     <table>
       <thead>

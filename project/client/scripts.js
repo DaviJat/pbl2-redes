@@ -1,8 +1,12 @@
 const API_URL = 'http://127.0.0.1:5000';
 
-async function carregarTrechos() {
+async function carregarTrechos(origem = '', destino = '') {
   try {
-    const response = await fetch(`${API_URL}/trechos`);
+    const url = new URL(`${API_URL}/trechos`);
+    if (origem) url.searchParams.append("origem", origem);
+    if (destino) url.searchParams.append("destino", destino);
+
+    const response = await fetch(url);
     if (response.ok) {
       const data = await response.json();
       atualizarTabela(data);

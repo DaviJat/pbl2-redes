@@ -7,8 +7,8 @@ app = Flask(__name__)
 CORS(app)
 
 # Identificação do servidor e arquivo pickle de trechos
-server_id = "A"
-filename = "trechos_server_a.plk"
+server_id = "b"
+filename = "trechos_server_B.plk"
 other_servers = ["http://localhost:5000", "http://localhost:5002"]
 
 # Carregar os trechos deste servidor

@@ -1,4 +1,4 @@
-const API_URL = 'http://127.0.0.1:5000'; // Defina aqui o endereço IP das requisições
+const API_URL = 'http://127.0.0.1:5000';
 
 async function carregarTrechos() {
   try {
@@ -54,7 +54,7 @@ async function confirmarCompra() {
     const data = await response.json();
     if (response.ok) {
       logStatus(`Compra confirmada para o trecho ${trechoId}: ${data.status}`);
-      carregarTrechos(); // Atualizar a lista de trechos
+      carregarTrechos();
     } else {
       logStatus(`Erro ao confirmar compra para o trecho ${trechoId}: ${data.error}`);
     }

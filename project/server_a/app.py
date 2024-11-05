@@ -4,7 +4,7 @@ import threading
 import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from utils import create_routes, fetch_trechos_from_servers, receive_request, confirm_purchase, load_trechos, create_graph, lamport_clock, queue, request_region_access
+from utils import create_routes, fetch_trechos_from_servers, load_trechos, create_graph
 
 app = Flask(__name__)
 CORS(app)
@@ -39,28 +39,10 @@ def return_trechos():
 # Endpoint para compra com controle de acesso a múltiplas regiões críticas
 @app.route('/comprar', methods=['POST'])
 def comprar():
-    data = request.get_json()
-    print(data) # Até aqui ta ok
+    trechos = request.get_json()
+    print(trechos) #
 
-    trecho_ids = data["trecho_ids"]  # Lista de IDs de trechos para a rota selecionada
-
-    # Solicitar acesso a cada trecho (região crítica) na rota
-    for trecho_id in trecho_ids:
-        if not request_region_access(trecho_id, server_id, other_servers):
-            return {"error": f"Falha ao adquirir acesso exclusivo para o trecho {trecho_id}"}, 409
-
-    # Confirmar compra de todos os trechos adquiridos
-    for trecho_id in trecho_ids:
-        confirm_purchase(trecho_id, server_id, filename)
-
-    return {"status": "confirmed", "message": f"Compra dos trechos {trecho_ids} confirmada"}, 200
-
-# Endpoint para receber requisição de reserva de trecho de outro servidor
-@app.route('/receive_request', methods=['POST'])
-def receive_request_handler():
-    data = request.get_json()
-    receive_request(data)
-    return {"status": "received"}, 200
+    return 'Compra'
 
 if __name__ == "__main__":
     app.run(port=5000)

@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  servidor_a:
+    build:
+      context: ./project/server_a
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - rede_servidores
+
+  servidor_b:
+    build:
+      context: ./project/server_b
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    networks:
+      - rede_servidores
+
+  servidor_c:
+    build:
+      context: ./project/server_c
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5002"
+    networks:
+      - rede_servidores
+
+  cliente:
+    build:
+      context: ./project/client
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    networks:
+      - rede_servidores
+    depends_on:
+      - servidor_a
+      - servidor_b
+      - servidor_c
+
+  teste_exclusao_mutua:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Certifique-se de que este Dockerfile executa o teste_exclusao_mutua.py
+    networks:
+      - rede_servidores
+    depends_on:
+      - servidor_a
+      - servidor_b
+      - servidor_c
+
+networks:
+  rede_servidores:
+    driver: bridge
+

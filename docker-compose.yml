@@ -44,7 +44,7 @@ services:
   teste_exclusao_mutua:
     build:
       context: .
-      dockerfile: Dockerfile  # Certifique-se de que este Dockerfile executa o teste_exclusao_mutua.py
+      dockerfile: Dockerfile
     networks:
       - rede_servidores
     depends_on:

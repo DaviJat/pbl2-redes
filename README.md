@@ -81,10 +81,17 @@ A configuração dos servidores de forma distribuída também destacou a import�
 
 ## 5. Referências
 PYTHON Software Foundation. Python documentation: socket — Low-level networking interface. Disponível em: https://docs.python.org/3/library/socket.html. Acesso em: out. 2024.
+
 Grinberg, M. Flask Documentation. Flask, Pallets Projects, https://flask.palletsprojects.com/en/latest/. Acesso em: out. 2024.
+
 DOCKER INC. O que é Docker?. Disponível em: https://www.docker.com/what-docker. Acesso em: out. 2024.
+
 FABRICIO VERONEZ. Docker do zero ao compose: Parte 01. Disponível em: https://www.youtube.com/watch?v=GkMJJkWRgBQ. Acesso em: out. 2024.
+
 PYTHON Software Foundation. pickle — Python object serialization. Disponível em: https://docs.python.org/3/library/pickle.html. Acesso em: out. 2024.
+
 RODRIGUES, Douglas. A Evolução da Internet: Desde os Primórdios até os Dias Atuais. YouTube, 28 out. 2023. Disponível em: https://www.youtube.com/watch?v=DaPHo_VFccg. Acesso em: nov. 2024.
+
 RODRIGUES, Douglas. Inovações Tecnológicas: O Futuro das Comunicações Digitais. YouTube, 29 out. 2023. Disponível em: https://www.youtube.com/watch?v=EmcWq_DvqcA. Acesso em: nov. 2024.
+
 FERNANDES, Luiz Gustavo Leão. Algoritmos Distribuídos. Pontifícia Universidade Católica do Rio Grande do Sul. Disponível em: https://www.inf.pucrs.br/gustavo/disciplinas/ppd/material/slides-algos_distr-novo.pdf. Acesso em: nov. 2024.

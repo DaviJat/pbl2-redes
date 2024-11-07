@@ -3,7 +3,7 @@ import os
 
 trechos_a = [
     {"id": 1, "servidor": "a", "origem": "São Paulo", "destino": "Rio de Janeiro", "distancia": 430, "quantidade_passagens": 10},
-    {"id": 2, "servidor": "a", "origem": "São Paulo", "destino": "Brasília", "distancia": 1015, "quantidade_passagens": 5},
+    {"id": 2, "servidor": "a", "origem": "São Paulo", "destino": "Brasília", "distancia": 1015, "quantidade_passagens": 225},
     {"id": 3, "servidor": "a", "origem": "São Paulo", "destino": "Salvador", "distancia": 1960, "quantidade_passagens": 3},
     {"id": 4, "servidor": "a", "origem": "São Paulo", "destino": "Fortaleza", "distancia": 3120, "quantidade_passagens": 2},
     {"id": 5, "servidor": "a", "origem": "São Paulo", "destino": "Belo Horizonte", "distancia": 585, "quantidade_passagens": 8},
@@ -17,7 +17,23 @@ trechos_a = [
     {"id": 13, "servidor": "a", "origem": "Rio de Janeiro", "destino": "Belo Horizonte", "distancia": 440, "quantidade_passagens": 7},
     {"id": 14, "servidor": "a", "origem": "Rio de Janeiro", "destino": "Manaus", "distancia": 3680, "quantidade_passagens": 3},
     {"id": 15, "servidor": "a", "origem": "Rio de Janeiro", "destino": "Curitiba", "distancia": 850, "quantidade_passagens": 5},
-    {"id": 16, "servidor": "a", "origem": "Rio de Janeiro", "destino": "Recife", "distancia": 2330, "quantidade_passagens": 3}
+    {"id": 16, "servidor": "a", "origem": "Rio de Janeiro", "destino": "Recife", "distancia": 2330, "quantidade_passagens": 3},
+    {"id": 17, "servidor": "a", "origem": "Rio de Janeiro", "destino": "São Paulo", "distancia": 430, "quantidade_passagens": 10},
+    {"id": 18, "servidor": "a", "origem": "Brasília", "destino": "São Paulo", "distancia": 1015, "quantidade_passagens": 5},
+    {"id": 19, "servidor": "a", "origem": "Salvador", "destino": "São Paulo", "distancia": 1960, "quantidade_passagens": 3},
+    {"id": 20, "servidor": "a", "origem": "Fortaleza", "destino": "São Paulo", "distancia": 3120, "quantidade_passagens": 2},
+    {"id": 21, "servidor": "a", "origem": "Belo Horizonte", "destino": "São Paulo", "distancia": 585, "quantidade_passagens": 8},
+    {"id": 22, "servidor": "a", "origem": "Manaus", "destino": "São Paulo", "distancia": 3930, "quantidade_passagens": 4},
+    {"id": 23, "servidor": "a", "origem": "Curitiba", "destino": "São Paulo", "distancia": 410, "quantidade_passagens": 6},
+    {"id": 24, "servidor": "a", "origem": "Recife", "destino": "São Paulo", "distancia": 2670, "quantidade_passagens": 2},
+    {"id": 25, "servidor": "a", "origem": "Porto Alegre", "destino": "São Paulo", "distancia": 1115, "quantidade_passagens": 5},
+    {"id": 26, "servidor": "a", "origem": "Brasília", "destino": "Rio de Janeiro", "distancia": 1160, "quantidade_passagens": 6},
+    {"id": 27, "servidor": "a", "origem": "Salvador", "destino": "Rio de Janeiro", "distancia": 1660, "quantidade_passagens": 4},
+    {"id": 28, "servidor": "a", "origem": "Fortaleza", "destino": "Rio de Janeiro", "distancia": 2800, "quantidade_passagens": 1},
+    {"id": 29, "servidor": "a", "origem": "Belo Horizonte", "destino": "Rio de Janeiro", "distancia": 440, "quantidade_passagens": 7},
+    {"id": 30, "servidor": "a", "origem": "Manaus", "destino": "Rio de Janeiro", "distancia": 3680, "quantidade_passagens": 3},
+    {"id": 31, "servidor": "a", "origem": "Curitiba", "destino": "Rio de Janeiro", "distancia": 850, "quantidade_passagens": 5},
+    {"id": 32, "servidor": "a", "origem": "Recife", "destino": "Rio de Janeiro", "distancia": 2330, "quantidade_passagens": 3}
 ]
 
 trechos_b = [
@@ -26,7 +42,7 @@ trechos_b = [
     {"id": 3, "servidor": "b", "origem": "Brasília", "destino": "Fortaleza", "distancia": 2200, "quantidade_passagens": 2},
     {"id": 4, "servidor": "b", "origem": "Brasília", "destino": "Belo Horizonte", "distancia": 740, "quantidade_passagens": 7},
     {"id": 5, "servidor": "b", "origem": "Brasília", "destino": "Manaus", "distancia": 3490, "quantidade_passagens": 1},
-    {"id": 6, "servidor": "b", "origem": "Brasília", "destino": "Curitiba", "distancia": 1370, "quantidade_passagens": 5},
+    {"id": 6, "servidor": "b", "origem": "Brasília", "destino": "Curitiba", "distancia": 1370, "quantidade_passagens": 189},
     {"id": 7, "servidor": "b", "origem": "Brasília", "destino": "Recife", "distancia": 2200, "quantidade_passagens": 3},
     {"id": 8, "servidor": "b", "origem": "Brasília", "destino": "Porto Alegre", "distancia": 2020, "quantidade_passagens": 4},
     {"id": 9, "servidor": "b", "origem": "Salvador", "destino": "Fortaleza", "distancia": 1020, "quantidade_passagens": 3},
@@ -36,8 +52,25 @@ trechos_b = [
     {"id": 13, "servidor": "b", "origem": "Salvador", "destino": "Recife", "distancia": 800, "quantidade_passagens": 5},
     {"id": 14, "servidor": "b", "origem": "Salvador", "destino": "Porto Alegre", "distancia": 3070, "quantidade_passagens": 2},
     {"id": 15, "servidor": "b", "origem": "Fortaleza", "destino": "Belo Horizonte", "distancia": 2520, "quantidade_passagens": 3},
-    {"id": 16, "servidor": "b", "origem": "Fortaleza", "destino": "Manaus", "distancia": 5680, "quantidade_passagens": 1}
+    {"id": 16, "servidor": "b", "origem": "Fortaleza", "destino": "Manaus", "distancia": 5680, "quantidade_passagens": 1},
+    {"id": 17, "servidor": "b", "origem": "Porto Alegre", "destino": "Rio de Janeiro", "distancia": 1550, "quantidade_passagens": 2},
+    {"id": 18, "servidor": "b", "origem": "Salvador", "destino": "Brasília", "distancia": 1440, "quantidade_passagens": 6},
+    {"id": 19, "servidor": "b", "origem": "Fortaleza", "destino": "Brasília", "distancia": 2200, "quantidade_passagens": 2},
+    {"id": 20, "servidor": "b", "origem": "Belo Horizonte", "destino": "Brasília", "distancia": 740, "quantidade_passagens": 7},
+    {"id": 21, "servidor": "b", "origem": "Manaus", "destino": "Brasília", "distancia": 3490, "quantidade_passagens": 1},
+    {"id": 22, "servidor": "b", "origem": "Curitiba", "destino": "Brasília", "distancia": 1370, "quantidade_passagens": 5},
+    {"id": 23, "servidor": "b", "origem": "Recife", "destino": "Brasília", "distancia": 2200, "quantidade_passagens": 3},
+    {"id": 24, "servidor": "b", "origem": "Porto Alegre", "destino": "Brasília", "distancia": 2020, "quantidade_passagens": 4},
+    {"id": 25, "servidor": "b", "origem": "Fortaleza", "destino": "Salvador", "distancia": 1020, "quantidade_passagens": 3},
+    {"id": 26, "servidor": "b", "origem": "Belo Horizonte", "destino": "Salvador", "distancia": 1370, "quantidade_passagens": 6},
+    {"id": 27, "servidor": "b", "origem": "Manaus", "destino": "Salvador", "distancia": 4430, "quantidade_passagens": 2},
+    {"id": 28, "servidor": "b", "origem": "Curitiba", "destino": "Salvador", "distancia": 2290, "quantidade_passagens": 4},
+    {"id": 29, "servidor": "b", "origem": "Recife", "destino": "Salvador", "distancia": 800, "quantidade_passagens": 5},
+    {"id": 30, "servidor": "b", "origem": "Porto Alegre", "destino": "Salvador", "distancia": 3070, "quantidade_passagens": 2},
+    {"id": 31, "servidor": "b", "origem": "Belo Horizonte", "destino": "Fortaleza", "distancia": 2520, "quantidade_passagens": 3},
+    {"id": 32, "servidor": "b", "origem": "Manaus", "destino": "Fortaleza", "distancia": 5680, "quantidade_passagens": 1}
 ]
+
 
 trechos_c = [
     {"id": 1, "servidor": "c", "origem": "Fortaleza", "destino": "Curitiba", "distancia": 3680, "quantidade_passagens": 2},
@@ -50,9 +83,22 @@ trechos_c = [
     {"id": 8, "servidor": "c", "origem": "Manaus", "destino": "Curitiba", "distancia": 4360, "quantidade_passagens": 1},
     {"id": 9, "servidor": "c", "origem": "Manaus", "destino": "Recife", "distancia": 5900, "quantidade_passagens": 1},
     {"id": 10, "servidor": "c", "origem": "Manaus", "destino": "Porto Alegre", "distancia": 4900, "quantidade_passagens": 1},
-    {"id": 11, "servidor": "c", "origem": "Curitiba", "destino": "Recife", "distancia": 3030, "quantidade_passagens": 2},
+    {"id": 11, "servidor": "c", "origem": "Curitiba", "destino": "Recife", "distancia": 3030, "quantidade_passagens": 201},
     {"id": 12, "servidor": "c", "origem": "Curitiba", "destino": "Porto Alegre", "distancia": 710, "quantidade_passagens": 7},
-    {"id": 13, "servidor": "c", "origem": "Recife", "destino": "Porto Alegre", "distancia": 3700, "quantidade_passagens": 2}
+    {"id": 13, "servidor": "c", "origem": "Recife", "destino": "Porto Alegre", "distancia": 3700, "quantidade_passagens": 2},
+    {"id": 14, "servidor": "c", "origem": "Curitiba", "destino": "Fortaleza", "distancia": 3680, "quantidade_passagens": 2},
+    {"id": 15, "servidor": "c", "origem": "Recife", "destino": "Fortaleza", "distancia": 800, "quantidade_passagens": 6},
+    {"id": 16, "servidor": "c", "origem": "Porto Alegre", "destino": "Fortaleza", "distancia": 4570, "quantidade_passagens": 1},
+    {"id": 17, "servidor": "c", "origem": "Manaus", "destino": "Belo Horizonte", "distancia": 3930, "quantidade_passagens": 2},
+    {"id": 18, "servidor": "c", "origem": "Curitiba", "destino": "Belo Horizonte", "distancia": 1000, "quantidade_passagens": 4},
+    {"id": 19, "servidor": "c", "origem": "Recife", "destino": "Belo Horizonte", "distancia": 2090, "quantidade_passagens": 3},
+    {"id": 20, "servidor": "c", "origem": "Porto Alegre", "destino": "Belo Horizonte", "distancia": 1710, "quantidade_passagens": 5},
+    {"id": 21, "servidor": "c", "origem": "Curitiba", "destino": "Manaus", "distancia": 4360, "quantidade_passagens": 1},
+    {"id": 22, "servidor": "c", "origem": "Recife", "destino": "Manaus", "distancia": 5900, "quantidade_passagens": 1},
+    {"id": 23, "servidor": "c", "origem": "Porto Alegre", "destino": "Manaus", "distancia": 4900, "quantidade_passagens": 1},
+    {"id": 24, "servidor": "c", "origem": "Recife", "destino": "Curitiba", "distancia": 3030, "quantidade_passagens": 2},
+    {"id": 25, "servidor": "c", "origem": "Porto Alegre", "destino": "Curitiba", "distancia": 710, "quantidade_passagens": 7},
+    {"id": 26, "servidor": "c", "origem": "Porto Alegre", "destino": "Recife", "distancia": 3700, "quantidade_passagens": 2}
 ]
 
 base_diretorio = "project"

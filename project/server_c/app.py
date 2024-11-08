@@ -3,21 +3,28 @@ import pickle
 import threading
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from utils import create_routes, fetch_trechos_from_servers, load_trechos, create_graph, request_purchase
+import requests
+from utils import create_routes, fetch_trechos_from_servers, load_trechos, create_graph
 
 # Inicialização do aplicativo Flask e configuração de CORS
 app = Flask(__name__)
 CORS(app)
 
 # Configurações do servidor
-server_id = "C"  # Identificação do servidor atual
-locks = {}  # Dicionário de locks para cada trecho
-filename = os.path.join("project", "server_c", "trechos_server_c.plk")  # Caminho do arquivo de dados
-other_servers = ["http://localhost:5000", "http://localhost:5001"]  # URLs dos outros servidores
+server_id = "c"  # Mude este valor para "a", "b", ou "c" conforme o servidor
+other_servers = {
+    "a": "http://127.0.0.1:5000",
+    "b": "http://127.0.0.1:5001",
+    "c": "http://127.0.0.1:5002"
+}
 
-# Variáveis globais para controle de Lamport
-clock = 0  # Relógio lógico para controle de requisições
-queue = []  # Fila de requisições para controle de concorrência
+# Caminho do arquivo de dados
+filename = os.path.join("project", f"server_{server_id}", f"trechos_server_{server_id}.plk")
+
+# Variáveis globais para controle de Lamport, concorrência e locks
+clock = 0
+queue = []
+locks = {}  # Dicionário de locks para cada trecho
 
 def acquire_lock(trecho_id):
     """Função para adquirir lock para um trecho específico."""
@@ -29,9 +36,7 @@ def acquire_lock(trecho_id):
 def get_trechos():
     origem = request.args.get('origem', '')
     destino = request.args.get('destino', '')
-    all_servers = ["http://127.0.0.1:5002"] + other_servers
-
-    print(f"Obtendo trechos dos servidores: {all_servers}")
+    all_servers = [f"http://127.0.0.1:500{port}" for port in range(3)]
 
     all_trechos = fetch_trechos_from_servers(all_servers)
     trechos_in_graph = create_graph(all_trechos)
@@ -48,89 +53,69 @@ def return_trechos():
 def comprar():
     data = request.get_json()
     print(f"Recebido pedido de compra: {data}")
-    
+
     try:
-        # Adquire locks de cada trecho antes de realizar a compra
-        acquired_locks = []
         for trecho in data["rota"]:
             trecho_id = trecho["id"]
-            trecho_lock = acquire_lock(trecho_id)
-            trecho_lock.acquire()
-            acquired_locks.append(trecho_lock)
+            trecho_servidor = trecho["servidor"]
 
-        # Verifica se todos os trechos ainda têm passagens disponíveis
+            # Verifique se o trecho pertence ao servidor atual ou a outro
+            if trecho_servidor != server_id:
+                # Redirecione a requisição para o servidor proprietário do trecho
+                server_url = other_servers.get(trecho_servidor)
+                if server_url:
+                    print(f"Redirecionando a compra para o servidor {trecho_servidor.upper()}")
+                    response = requests.post(f"{server_url}/comprar", json=data)
+                    return response.content, response.status_code
+                else:
+                    return jsonify({"error": "Servidor proprietário não encontrado"}), 400
+
+        # Adquire locks para cada trecho local (pertencente a este servidor)
+        acquired_locks = []
         trechos = load_trechos(filename)
+        
         for trecho in data["rota"]:
             matching_trecho = next((t for t in trechos if t["id"] == trecho["id"] and t["servidor"] == trecho["servidor"]), None)
             if not matching_trecho or matching_trecho["quantidade_passagens"] < 1:
                 raise ValueError("Trecho indisponível")
+            
+            trecho_lock = acquire_lock(trecho["id"])
+            trecho_lock.acquire()
+            acquired_locks.append(trecho_lock)
 
         # Processa a compra enquanto os trechos estão bloqueados
-        request_purchase(data, other_servers)
+        for trecho in data["rota"]:
+            for t in trechos:
+                if t["id"] == trecho["id"] and t["servidor"] == trecho["servidor"]:
+                    t["quantidade_passagens"] -= 1
+                    print(f"Trecho atualizado: {t}")
 
-        # Libera todos os locks após o processamento
+        # Salva as alterações
+        with open(filename, 'wb') as f:
+            pickle.dump(trechos, f)
+
+        # Libera os locks após o processamento
         for lock in acquired_locks:
             lock.release()
 
         return jsonify({"status": "success", "message": "Compra realizada com sucesso"}), 200
     except Exception as e:
         print(f"Erro ao processar compra: {e}")
-        # Libera todos os locks em caso de erro
         for lock in acquired_locks:
             if lock.locked():
                 lock.release()
         return jsonify({"status": "error", "message": "Erro ao realizar a compra"}), 500
 
-@app.route('/purchase_request', methods=['POST'])
-def receive_purchase_request():
-    global clock, queue
+@app.route('/check_trecho_status', methods=['GET'])
+def check_trecho_status():
     data = request.get_json()
-
-    if not data:
-        return jsonify({"error": "Invalid data"}), 400
-
-    clock = max(clock, data["id"]) + 1
-    queue.append(data)
-    print(f"Requisição de compra recebida de {data['server_id']} com timestamp {data['id']}")
-
-    return jsonify({"message": "Compra request received", "clock": clock}), 200
-
-@app.route('/release', methods=['POST'])
-def receive_release():
-    global queue
-    data = request.get_json()
-
-    if not data:
-        return jsonify({"error": "Invalid data"}), 400
-
-    queue = [req for req in queue if not (req["id"] == data["id"] and req["server_id"] == data["server_id"])]
-    print(f"Liberação recebida de {data['server_id']} para timestamp {data['id']}")
-
-    return jsonify({"message": "Release received"}), 200
-
-@app.route('/update_trecho', methods=['POST'])
-def update_trecho():
-    trecho_data = request.get_json()
-    trecho_id = trecho_data["id"]
-    trecho_servidor = trecho_data["servidor"]
-
+    trecho_id = data.get("id")
     trechos = load_trechos(filename)
 
     for trecho in trechos:
-        if trecho["id"] == trecho_id and trecho["servidor"] == trecho_servidor:
-            if trecho["quantidade_passagens"] > 1:
-                trecho["quantidade_passagens"] -= 1
-                print(f"Atualizado trecho: {trecho}")
-            else:
-                trechos.remove(trecho)
-                print(f"Removido trecho por falta de passagens: {trecho}")
-
-            with open(filename, 'wb') as f:
-                pickle.dump(trechos, f)
-
-            return jsonify({"message": "Trecho atualizado com sucesso"}), 200
-
-    return jsonify({"error": "Trecho não encontrado"}), 404
+        if trecho["id"] == trecho_id and trecho["quantidade_passagens"] > 0:
+            return jsonify({"disponivel": True}), 200
+    return jsonify({"disponivel": False}), 404
 
 if __name__ == "__main__":
-    app.run(port=5002)
+    app.run(port=5000 if server_id == "a" else 5001 if server_id == "b" else 5002)

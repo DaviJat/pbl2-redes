@@ -13,22 +13,22 @@ SERVER_URLS = {
 # Dados dos trechos disponíveis para cada servidor
 TRECHOS = {
     "a": [
-        {"id": 1, "servidor": "a", "origem": "Brasília", "destino": "Salvador", "distancia": 1440, "quantidade_passagens": 100},
-        {"id": 2, "servidor": "a", "origem": "Salvador", "destino": "São Paulo", "distancia": 1960, "quantidade_passagens": 100},
-        {"id": 3, "servidor": "a", "origem": "São Paulo", "destino": "Curitiba", "distancia": 410, "quantidade_passagens": 100},
-        {"id": 4, "servidor": "a", "origem": "Curitiba", "destino": "Porto Alegre", "distancia": 710, "quantidade_passagens": 100},
+        {'id': 1, 'servidor': 'a', 'origem': 'São Paulo', 'destino': 'Rio de Janeiro', 'distancia': 430, 'quantidade_passagens': 100},
+        {'id': 2, 'servidor': 'a', 'origem': 'São Paulo', 'destino': 'Brasília', 'distancia': 1015, 'quantidade_passagens': 100},
+        {'id': 3, 'servidor': 'a', 'origem': 'São Paulo', 'destino': 'Salvador', 'distancia': 1960, 'quantidade_passagens': 100},
+        {'id': 4, 'servidor': 'a', 'origem': 'São Paulo', 'destino': 'Fortaleza', 'distancia': 3120, 'quantidade_passagens': 100}
     ],
     "b": [
-        {"id": 1, "servidor": "b", "origem": "Rio de Janeiro", "destino": "Brasília", "distancia": 1160, "quantidade_passagens": 100},
-        {"id": 2, "servidor": "b", "origem": "Brasília", "destino": "Belo Horizonte", "distancia": 740, "quantidade_passagens": 100},
-        {"id": 3, "servidor": "b", "origem": "Belo Horizonte", "destino": "Salvador", "distancia": 1370, "quantidade_passagens": 100},
-        {"id": 4, "servidor": "b", "origem": "Salvador", "destino": "Recife", "distancia": 800, "quantidade_passagens": 100},
+        {'id': 1, 'servidor': 'b', 'origem': 'Rio de Janeiro', 'destino': 'Porto Alegre', 'distancia': 1550, 'quantidade_passagens': 100},
+        {'id': 2, 'servidor': 'b', 'origem': 'Brasília', 'destino': 'Salvador', 'distancia': 1440, 'quantidade_passagens': 100},
+        {'id': 3, 'servidor': 'b', 'origem': 'Brasília', 'destino': 'Fortaleza', 'distancia': 2200, 'quantidade_passagens': 100},
+        {'id': 4, 'servidor': 'b', 'origem': 'Brasília', 'destino': 'Belo Horizonte', 'distancia': 740, 'quantidade_passagens': 100}
     ],
     "c": [
-        {"id": 1, "servidor": "c", "origem": "Manaus", "destino": "Brasília", "distancia": 3490, "quantidade_passagens": 100},
-        {"id": 2, "servidor": "c", "origem": "Brasília", "destino": "São Paulo", "distancia": 1015, "quantidade_passagens": 100},
-        {"id": 3, "servidor": "c", "origem": "São Paulo", "destino": "Rio de Janeiro", "distancia": 430, "quantidade_passagens": 100},
-        {"id": 4, "servidor": "c", "origem": "Rio de Janeiro", "destino": "Fortaleza", "distancia": 2800, "quantidade_passagens": 100},
+        {'id': 1, 'servidor': 'c', 'origem': 'Fortaleza', 'destino': 'Curitiba', 'distancia': 3680, 'quantidade_passagens': 100},
+        {'id': 2, 'servidor': 'c', 'origem': 'Fortaleza', 'destino': 'Recife', 'distancia': 800, 'quantidade_passagens': 100},
+        {'id': 2, 'servidor': 'c', 'origem': 'Fortaleza', 'destino': 'Recife', 'distancia': 800, 'quantidade_passagens': 100},
+        {'id': 3, 'servidor': 'c', 'origem': 'Fortaleza', 'destino': 'Porto Alegre', 'distancia': 4570, 'quantidade_passagens': 100}
     ]
 }
 

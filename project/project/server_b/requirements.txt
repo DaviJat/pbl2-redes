@@ -1,4 +1,0 @@
-Flask
-requests
-networkx
-flask_cors

@@ -25,14 +25,39 @@ def process_purchase(trechos):
         server_url = servidor_urls.get(trecho["servidor"].lower())
         if server_url:
             try:
-                response = requests.post(f"{server_url}/update_trecho", json=trecho)
-                if response.status_code == 200:
-                    print(f"Atualizado trecho: {trecho}")
-                elif response.status_code == 404:
-                    print(f"Trecho já vendido ou não encontrado: {trecho}")
+                # Verifique o status do trecho antes de comprar
+                response = requests.get(f"{server_url}/check_trecho_status", json={"id": trecho["id"]})
+                
+                if response.status_code == 200 and response.json().get("disponivel", False):
+                    # Se disponível, tente comprar o trecho
+                    response = requests.post(f"{server_url}/update_trecho", json=trecho)
+                    if response.status_code == 200:
+                        print(f"Trecho comprado e atualizado: {trecho}")
+                    else:
+                        print(f"Falha ao atualizar trecho: {trecho}, motivo: {response.status_code}")
+                        break  # Parar a operação se o trecho não puder ser comprado
+                else:
+                    print(f"Trecho não disponível para compra: {trecho}")
                     break
             except requests.exceptions.RequestException as e:
                 print(f"Erro de conexão com {server_url}: {e}")
+                break  # Se não conseguir conexão, parar a operação
+
+def release_access(request, other_servers):
+    global queue
+    queue = [req for req in queue if req != request]
+
+    for server in other_servers:
+        try:
+            response = requests.post(f"{server}/release", json={"server_id": request["server_id"], "id": request["id"]})
+            print(f"Liberação enviada para {server}, status: {response.status_code}")
+
+            # Atualize os trechos vendidos globalmente
+            for trecho in request["trechos"]["rota"]:
+                requests.post(f"{server}/update_global_status", json=trecho)
+        except requests.exceptions.RequestException as e:
+            print(f"Erro de conexão com {server}: {e}")
+
 
 def request_purchase(trechos, other_servers):
     global queue
@@ -59,17 +84,6 @@ def request_purchase(trechos, other_servers):
 def is_top_of_queue(request):
     sorted_queue = sorted(queue, key=lambda x: (x["id"], x["server_id"]))
     return sorted_queue[0] == request if sorted_queue else False
-
-def release_access(request, other_servers):
-    global queue
-    queue = [req for req in queue if req != request]
-
-    for server in other_servers:
-        try:
-            response = requests.post(f"{server}/release", json={"server_id": request["server_id"], "id": request["id"]})
-            print(f"Liberação enviada para {server}, status: {response.status_code}")
-        except requests.exceptions.RequestException as e:
-            print(f"Erro de conexão com {server}: {e}")
 
 def load_trechos(filename):
     if os.path.exists(filename):
